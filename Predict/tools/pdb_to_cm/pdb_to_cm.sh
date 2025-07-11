@@ -3,7 +3,7 @@
 #################### activate conda env #######################
 
 eval "$(conda shell.bash hook)"
-conda activate pyg
+conda activate GATSol
 
 #################### prcessing all fna files #######################
 counter=0
