@@ -1,26 +1,20 @@
-# Truncate a PDB file to match the number of residues in a given sequence (from FASTA or list.csv)
-# Usage: python truncate_pdb_to_seq.py lacZ.pdb lacZ_trunc.pdb <sequence_length> <chain_id>
-# Example: python truncate_pdb_to_seq.py lacZ.pdb lacZ_trunc.pdb 1010 A
+# Truncate lacZ.pdb to the first 1010 residues in chain A, outputting lacZ_trunc.pdb
+# Usage: python truncate_pdb_to_seq.py
 
-import sys
-
-if len(sys.argv) != 5:
-    print("Usage: python truncate_pdb_to_seq.py <input_pdb> <output_pdb> <sequence_length> <chain_id>")
-    sys.exit(1)
-
-input_pdb = sys.argv[1]
-output_pdb = sys.argv[2]
-max_residues = int(sys.argv[3])
-chain_id = sys.argv[4]
-
-written_residues = set()
+input_pdb = 'lacZ.pdb'
+output_pdb = 'lacZ_trunc.pdb'
+max_residues = 1010  # exact length from lacZ.fasta
+chain_id = 'A'
 
 with open(input_pdb) as inp, open(output_pdb, 'w') as out:
     for line in inp:
         if line.startswith("ATOM") or line.startswith("HETATM"):
-            # Extract chain and residue number
             res_chain = line[21]
-            res_num = int(line[22:26])
+            try:
+                res_num = int(line[22:26])
+            except ValueError:
+                out.write(line)
+                continue
             if res_chain == chain_id and res_num > max_residues:
                 continue
         out.write(line)
