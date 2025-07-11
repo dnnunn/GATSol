@@ -1,24 +1,8 @@
 name: pyg
 channels:
-  - schrodinger
-  - salilab
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
-  - bioconda
   - conda-forge
   - defaults
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/peterjc123/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
-  - https://mirrors.aliyun.com/anaconda/pkgs/r
-  - https://mirrors.aliyun.com/anaconda/pkgs/msys2
-  - https://mirrors.aliyun.com/anaconda/pkgs/main
-  - https://mirrors.aliyun.com/anaconda/pkgs/free
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/menpo/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
-  - https://levinthal:paradox@conda.graylab.jhu.edu
+  - bioconda
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=2_gnu
