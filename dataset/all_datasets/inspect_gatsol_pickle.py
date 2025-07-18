@@ -50,6 +50,20 @@ def inspect_pickle_file(file_path):
                                 print(f"    Value: {item_repr}")
                 else:
                     print(f"Content of first element: {first_element}")
+                print("\n--- All attributes of the first element ---")
+                for attr in dir(first_element):
+                    if not attr.startswith('_'): # Exclude private attributes
+                        try:
+                            value = getattr(first_element, attr)
+                            # Avoid printing large tensors
+                            if isinstance(value, torch.Tensor) and value.numel() > 10:
+                                print(f"  {attr}: Tensor with shape {value.shape}")
+                            elif callable(value):
+                                continue # Skip methods
+                            else:
+                                print(f"  {attr}: {value}")
+                        except Exception as e:
+                            print(f"  Could not get attribute {attr}: {e}")
 
         elif isinstance(data, list):
             print(f"Data is a list with {len(data)} elements.")
