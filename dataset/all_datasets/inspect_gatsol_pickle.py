@@ -51,5 +51,5 @@ def inspect_pickle_file(file_path):
         print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    pickle_file = 'dataset/all_datasets/data.pkl'
+    pickle_file = 'GATSol_datasets.pkl'
     inspect_pickle_file(pickle_file)
