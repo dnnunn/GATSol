@@ -50,20 +50,28 @@ def inspect_pickle_file(file_path):
                                 print(f"    Value: {item_repr}")
                 else:
                     print(f"Content of first element: {first_element}")
-                print("\n--- All attributes of the first element ---")
+                print("\n--- Deeper inspection of the first element ---")
+                # The Data object acts like a dictionary
+                for key, value in first_element.items():
+                    print(f"\nAttribute key: '{key}'")
+                    print(f"  Type: {type(value)}")
+                    if isinstance(value, torch.Tensor):
+                        print(f"  Shape: {value.shape}")
+                    elif isinstance(value, (list, tuple)):
+                        print(f"  Length: {len(value)}")
+                    else:
+                        print(f"  Value: {value}")
+
+                # Also check for non-standard attributes that might not be in .keys()
+                print("\n--- Checking for other non-tensor attributes ---")
                 for attr in dir(first_element):
-                    if not attr.startswith('_'): # Exclude private attributes
+                    if not attr.startswith('_') and attr not in first_element.keys():
                         try:
                             value = getattr(first_element, attr)
-                            # Avoid printing large tensors
-                            if isinstance(value, torch.Tensor) and value.numel() > 10:
-                                print(f"  {attr}: Tensor with shape {value.shape}")
-                            elif callable(value):
-                                continue # Skip methods
-                            else:
+                            if not isinstance(value, torch.Tensor) and not callable(value):
                                 print(f"  {attr}: {value}")
-                        except Exception as e:
-                            print(f"  Could not get attribute {attr}: {e}")
+                        except Exception:
+                            continue
 
         elif isinstance(data, list):
             print(f"Data is a list with {len(data)} elements.")
@@ -88,5 +96,5 @@ def inspect_pickle_file(file_path):
         print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    pickle_file = 'GATSol_datasets.pkl'
+    pickle_file = 'all_datasets/data.pkl'
     inspect_pickle_file(pickle_file)
