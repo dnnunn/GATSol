@@ -1,17 +1,42 @@
 import torch
 import sys
+import os
 
 def inspect_pickle_file(file_path):
     """
-    Loads a pickle file using torch and prints information about its contents.
+    Loads a pickle file, handling PyTorch-specific serialization and persistent IDs,
+    and prints its contents.
     """
     print(f"Attempting to load pickle file with torch: {file_path}")
+
+    # The individual binary data files are in a 'data' subdirectory
+    # relative to the main pickle file.
+    base_dir = os.path.dirname(file_path)
+    data_dir = os.path.join(base_dir, 'data')
+
+    def persistent_load_func(pid):
+        """This function is called by pickle when it finds a persistent ID.
+           It loads the corresponding binary file.
+        """
+        # The persistent ID is the filename in the 'data' directory.
+        file_path = os.path.join(data_dir, str(pid))
+        try:
+            with open(file_path, 'rb') as f:
+                # The individual files are also torch-serialized
+                return torch.load(f, map_location=torch.device('cpu'))
+        except FileNotFoundError:
+            print(f"[persistent_load] Error: Could not find file {file_path}")
+            return None
+        except Exception as e:
+            print(f"[persistent_load] Error loading file {file_path}: {e}")
+            return None
+
     try:
-        # Use torch.load and map_location to ensure it loads on CPU
-        data = torch.load(file_path, map_location=torch.device('cpu'))
-        
-        print("\nSuccessfully loaded the file with torch.")
-        print("----------------------------------------")
+        # Pass the custom loader to torch.load
+        data = torch.load(file_path, map_location=torch.device('cpu'), persistent_load=persistent_load_func)
+
+        print("\nSuccessfully loaded the file with torch using persistent_load.")
+        print("-" * 40)
         
         print(f"Type of loaded data: {type(data)}")
         
