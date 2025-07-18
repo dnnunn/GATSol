@@ -27,6 +27,30 @@ def inspect_pickle_file(file_path):
                 if hasattr(value, 'shape'):
                     print(f"  Shape: {value.shape}")
 
+            # Inspect the first element of the 'train' list
+            if 'train' in data and isinstance(data['train'], list) and data['train']:
+                print("\n--- Inspecting first element of 'train' list ---")
+                first_element = data['train'][0]
+                print(f"Type of first element: {type(first_element)}")
+                
+                # If it's a tuple or list, print its contents
+                if isinstance(first_element, (list, tuple)):
+                    print(f"Length of first element: {len(first_element)}")
+                    for i, item in enumerate(first_element):
+                        print(f"  Item {i}:")
+                        print(f"    Type: {type(item)}")
+                        if hasattr(item, 'shape'):
+                            print(f"    Shape: {item.shape}")
+                        else:
+                            # Truncate long strings for readability
+                            item_repr = repr(item)
+                            if len(item_repr) > 100:
+                                print(f"    Value (truncated): {item_repr[:100]}...")
+                            else:
+                                print(f"    Value: {item_repr}")
+                else:
+                    print(f"Content of first element: {first_element}")
+
         elif isinstance(data, list):
             print(f"Data is a list with {len(data)} elements.")
             # Print info about the first element
